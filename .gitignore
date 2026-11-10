@@ -1,0 +1,41 @@
+
+# IDE and editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python files (if added in future)
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Node.js files (if added in future)
+node_modules/
+npm-debug.log*
+
+# Build and deployment output
+dist/
+build/
+
+# Local captures and generated reports
+*.pcap
+*.pcapng
+reports/

@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="PhishSense Pro — a safe, rule-based phishing investigation and awareness lab.">
+<title>PhishSense Pro | Security Operations Lab</title>
+<style>
+:root{
+ --bg:#080e18;--sidebar:#0b1422;--panel:#101c2c;--panel2:#132238;--panel3:#0d1827;
+ --line:#24364d;--line2:#314964;--text:#e8f0fb;--muted:#91a4bd;--dim:#6e829d;
+ --cyan:#45d6e6;--blue:#6d9cff;--green:#43d6a0;--amber:#ffbf69;--red:#ff7185;--purple:#b39bff;
+ --shadow:0 16px 42px #0005;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}
+.app{min-height:100vh;display:grid;grid-template-columns:248px 1fr}
+.sidebar{background:linear-gradient(180deg,#0c1727,#09121f);border-right:1px solid var(--line);padding:22px 15px;display:flex;flex-direction:column;gap:24px;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:11px;padding:0 8px}.brandmark{height:39px;width:39px;border-radius:12px;background:linear-gradient(135deg,var(--cyan),var(--blue));display:grid;place-items:center;color:#061321;font-weight:1000;font-size:22px;box-shadow:0 8px 24px #45d6e633}.brand strong{font-size:16px;letter-spacing:.2px}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:1.3px;text-transform:uppercase}
+.navlabel{font-size:10px;font-weight:800;color:#657c99;letter-spacing:1.5px;padding:0 11px;margin-bottom:6px}.nav{display:grid;gap:5px}.nav button{border:1px solid transparent;background:transparent;color:#9fb1c8;text-align:left;padding:11px 12px;border-radius:11px;display:flex;align-items:center;gap:12px;font-weight:650}.nav button:hover{background:#13243a;color:white}.nav button.active{background:#15314a;border-color:#28516b;color:#e9fbff;box-shadow:inset 3px 0 var(--cyan)}.nav .ico{width:19px;text-align:center;font-size:16px}
+.sidebottom{margin-top:auto;border:1px solid var(--line);border-radius:13px;padding:13px;background:#101e30}.safe-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px #43d6a0;margin-right:7px}.sidebottom b{font-size:12px}.sidebottom p{font-size:11px;color:var(--muted);margin:6px 0 0}
+.main{min-width:0}.topbar{height:68px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;background:#0a1422dd;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}.crumb{color:var(--muted);font-size:12px}.crumb strong{color:var(--text)}.topright{display:flex;align-items:center;gap:15px}.live{font-size:11px;color:var(--green);font-weight:800;letter-spacing:.8px}.avatar{width:32px;height:32px;border-radius:10px;background:#1c3450;color:#b9d9ff;display:grid;place-items:center;font-weight:800}
+.content{max-width:1500px;margin:auto;padding:28px 30px 60px}.page{display:none}.page.active{display:block}.pagehead{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:22px}.eyebrow{font-size:10px;color:var(--cyan);font-weight:850;letter-spacing:1.6px;text-transform:uppercase}.pagehead h1{font-size:27px;line-height:1.2;margin:6px 0}.pagehead p{color:var(--muted);margin:0;max-width:720px}.btn{border:1px solid var(--line2);background:#172940;color:#dcecff;border-radius:10px;padding:9px 13px;font-weight:750;font-size:12px}.btn:hover{border-color:#5c83ad;background:#1c3552}.btn.primary{background:linear-gradient(100deg,var(--cyan),#79a6ff);border:0;color:#071321}.btn.danger{background:#401d2a;border-color:#733345;color:#ffbdc7}.btn:disabled{opacity:.45;cursor:not-allowed}
+.grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px}.panel{background:linear-gradient(155deg,#122136,#0e1929);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);min-width:0}.kpi{padding:17px 18px}.kpi .label{font-size:11px;color:var(--muted);font-weight:700}.kpi .value{font-size:27px;font-weight:850;margin:6px 0 2px;letter-spacing:-.7px}.kpi .sub{font-size:10px;color:var(--dim)}.accent{color:var(--cyan)}.green{color:var(--green)}.amber{color:var(--amber)}.red{color:var(--red)}
+.cols{grid-template-columns:minmax(0,1.45fr) minmax(280px,.75fr)}.panelhead{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}.panelhead h2{font-size:14px;margin:0}.panelbody{padding:17px 18px}.subtle{color:var(--muted);font-size:12px}.event{display:grid;grid-template-columns:9px 1fr auto;gap:11px;align-items:start;padding:12px 0;border-bottom:1px solid #203149}.event:last-child{border:0}.eventdot{width:8px;height:8px;border-radius:50%;margin-top:6px;background:var(--amber)}.event b{font-size:12px}.event p{margin:3px 0 0;color:var(--muted);font-size:11px}.event time{color:var(--dim);font-size:10px;white-space:nowrap}
+.barline{height:8px;background:#26374d;border-radius:99px;overflow:hidden}.barline span{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--blue));border-radius:99px}.metricrow{display:flex;justify-content:space-between;gap:10px;font-size:11px;margin:13px 0 6px}.metricrow span:last-child{color:#dceaff;font-weight:800}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.quick button{background:#12263d;border:1px solid #29435f;border-radius:12px;color:#dcecff;text-align:left;padding:14px}.quick button:hover{border-color:var(--cyan);transform:translateY(-1px)}.quick b{display:block;margin:7px 0 3px;font-size:12px}.quick span{font-size:10px;color:var(--muted)}.quick i{font-style:normal;font-size:20px}
+.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.field{background:#0b1726;border:1px solid var(--line2);border-radius:9px;padding:9px 11px;color:var(--text);outline:none}.field:focus{border-color:var(--cyan)}.field::placeholder{color:#647b96}
+.email-layout{display:grid;grid-template-columns:minmax(250px,.72fr) minmax(0,1.55fr) minmax(250px,.8fr);gap:13px;align-items:start}.listpanel{overflow:hidden}.mailitem{padding:13px 14px;border-bottom:1px solid #21334a;cursor:pointer}.mailitem:hover{background:#152940}.mailitem.selected{background:#15314a;border-left:3px solid var(--cyan);padding-left:11px}.mailitem .sender{font-size:12px;font-weight:800}.mailitem .subj{font-size:11px;color:#c7d6e8;margin:3px 0}.mailitem .preview{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pill{display:inline-block;border:1px solid var(--line2);border-radius:99px;padding:3px 7px;font-size:9px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.5px}.pill.high{color:#ff9cab;border-color:#844253;background:#4a1d2a66}.pill.medium{color:#ffd18a;border-color:#795b36;background:#49341b66}.pill.low{color:#83e6bf;border-color:#326d5a;background:#153e3266}
+.mailview{padding:19px}.mailtop{display:flex;justify-content:space-between;gap:10px;align-items:start}.mailtitle{font-size:19px;font-weight:850;margin:3px 0 15px}.mailfields{display:grid;gap:7px;padding:12px;background:#0b1726;border:1px solid #263a53;border-radius:11px;font-size:11px}.mailfields div{display:grid;grid-template-columns:65px 1fr;gap:8px}.mailfields label{color:var(--dim)}.mailfields span{overflow-wrap:anywhere}.mailtext{padding:18px 3px;color:#d2deed;white-space:pre-line;line-height:1.8;min-height:170px}.mailtext .fakebutton{display:inline-block;margin:10px 0;padding:9px 14px;background:#2b5e9a;border-radius:7px;color:white;font-weight:800}.attachment{display:inline-flex;gap:9px;align-items:center;padding:9px 11px;background:#14263b;border:1px solid #344d69;border-radius:9px;font-size:11px}
+.analysisbox{padding:16px}.analysisbox h3{font-size:13px;margin:0 0 6px}.analysisbox>p{font-size:11px;color:var(--muted);margin:0 0 13px}.finding{display:flex;gap:9px;padding:10px 0;border-bottom:1px solid #23354c}.finding:last-child{border:0}.finding .ficon{font-size:15px}.finding b{display:block;font-size:11px}.finding small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.score-ring{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;margin:5px auto 12px;background:conic-gradient(var(--red) 0deg,#273a50 0deg);position:relative}.score-ring:before{content:"";position:absolute;inset:9px;border-radius:50%;background:#101c2c}.score-ring strong{position:relative;font-size:27px}.risklabel{text-align:center;font-size:11px;font-weight:850;letter-spacing:1px;text-transform:uppercase}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tab{border:1px solid var(--line);background:#101d2d;color:var(--muted);padding:8px 12px;border-radius:9px;font-size:11px;font-weight:750}.tab.active{background:#15344c;color:#c9faff;border-color:#34758a}
+.indicator{display:flex;align-items:flex-start;gap:9px;padding:10px 0;border-bottom:1px solid #22354b}.indicator input{accent-color:var(--cyan);margin-top:3px}.indicator b{font-size:11px;display:block}.indicator small{font-size:10px;color:var(--muted)}
+.resultbox{margin-top:13px;padding:13px;border-radius:11px;background:#0b1726;border:1px solid var(--line)}.resultbox h4{margin:0 0 5px;font-size:12px}.resultbox p{margin:0;color:var(--muted);font-size:11px}
+.urlgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.urlinput{display:flex;gap:8px}.urlinput input{flex:1;min-width:0}.urlresult{margin-top:15px}.urlresult .score-ring{margin:10px auto}.domain{font-size:18px;font-weight:850;text-align:center;overflow-wrap:anywhere}.urlnote{font-size:11px;color:var(--muted);text-align:center}
+.knowledge{grid-template-columns:repeat(2,minmax(0,1fr))}.lesson{padding:17px}.lesson h3{margin:0 0 7px;font-size:14px}.lesson p,.lesson li{color:var(--muted);font-size:11px}.lesson ul{padding-left:17px;margin:8px 0}.quizq{padding:14px 0;border-bottom:1px solid var(--line)}.quizq:last-child{border:0}.quizq b{font-size:12px;display:block;margin-bottom:9px}.quizq label{display:block;font-size:11px;color:#c4d3e5;padding:5px 0}.quizq input{accent-color:var(--cyan);margin-right:7px}
+.toast{position:fixed;right:20px;bottom:20px;background:#18334a;border:1px solid #34758a;padding:12px 16px;border-radius:11px;box-shadow:var(--shadow);font-size:12px;display:none;z-index:20}.toast.show{display:block}
+.disclaimer{border:1px solid #725936;background:#3c2b171f;color:#d9bd91;padding:12px 14px;border-radius:11px;font-size:10px;margin-top:14px}
+.empty{padding:28px;text-align:center;color:var(--muted);font-size:12px}
+@media(max-width:1150px){.email-layout{grid-template-columns:250px 1fr}.email-layout .analysispanel{grid-column:1/-1}.analysispanel .panelbody{display:grid;grid-template-columns:170px 1fr;gap:15px;align-items:center}.analysispanel .score-ring{margin:0 auto}.analysispanel .findings{display:grid;grid-template-columns:1fr 1fr;gap:0 15px}}
+@media(max-width:850px){.app{grid-template-columns:72px 1fr}.sidebar{padding:18px 9px}.brand{padding:0 7px}.brandtext,.navlabel,.nav button .navtext,.sidebottom{display:none}.nav button{justify-content:center;padding:12px 5px}.nav .ico{font-size:18px}.content{padding:22px 18px}.topbar{padding:0 18px}.kpis{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}.email-layout{grid-template-columns:1fr}.email-layout .analysispanel{grid-column:auto}.analysispanel .panelbody{display:block}.analysispanel .findings{display:block}}
+@media(max-width:560px){.app{display:block}.sidebar{height:auto;position:relative;padding:10px;display:block;border-right:0;border-bottom:1px solid var(--line)}.brand{display:none}.nav{display:flex;justify-content:space-around}.nav button{padding:9px 10px}.nav .navtext{display:none}.topbar{height:54px}.content{padding:17px 12px 40px}.pagehead{display:block}.pagehead .toolbar{margin-top:12px}.kpis{gap:8px}.kpi{padding:12px}.kpi .value{font-size:22px}.quick{grid-template-columns:1fr}.urlgrid,.knowledge{grid-template-columns:1fr}.analysispanel .panelbody{display:block}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+ <div class="brand"><div class="brandmark">⌁</div><div class="brandtext"><strong>PhishSense Pro</strong><small>Security operations lab</small></div></div>
+ <div><div class="navlabel">WORKSPACE</div><nav class="nav">
+  <button class="active" data-page="dashboard"><span class="ico">▦</span><span class="navtext">Overview</span></button>
+  <button data-page="emails"><span class="ico">✉</span><span class="navtext">Email Lab</span></button>
+  <button data-page="url"><span class="ico">◎</span><span class="navtext">URL Inspector</span></button>
+  <button data-page="analyzer"><span class="ico">⌕</span><span class="navtext">Threat Analyzer</span></button>
+  <button data-page="learn"><span class="ico">▤</span><span class="navtext">Knowledge Center</span></button>
+ </nav></div>
+ <div class="sidebottom"><b><span class="safe-dot"></span>Offline training mode</b><p>All examples are fictional. No data leaves this browser.</p></div>
+</aside>
+<div class="main">
+<header class="topbar"><div class="crumb">PhishSense Pro <span style="color:#536984">/</span> <strong id="crumb">Overview</strong></div><div class="topright"><span class="live">● SIMULATION ACTIVE</span><div class="avatar">SA</div></div></header>
+<div class="content">
+<!-- DASHBOARD -->
+<section class="page active" id="page-dashboard">
+ <div class="pagehead"><div><div class="eyebrow">Security operations center</div><h1>Training overview</h1><p>Welcome to your phishing investigation workspace. Explore the simulated incidents, inspect indicators, and sharpen your response decisions.</p></div><button class="btn primary" onclick="navigate('emails')">Open Email Lab →</button></div>
+ <div class="grid kpis">
+  <div class="panel kpi"><div class="label">SIMULATED INCIDENTS</div><div class="value" id="kIncidents">06</div><div class="sub">Curated training messages</div></div>
+  <div class="panel kpi"><div class="label">INVESTIGATIONS COMPLETED</div><div class="value accent" id="kDone">0</div><div class="sub">Across this browser session</div></div>
+  <div class="panel kpi"><div class="label">DETECTION ACCURACY</div><div class="value green" id="kAccuracy">—</div><div class="sub">Based on completed investigations</div></div>
+  <div class="panel kpi"><div class="label">THREAT LEVELS</div><div class="value amber">3 <span style="font-size:13px;color:var(--muted)">bands</span></div><div class="sub">Low · Medium · High</div></div>
+ </div>
+ <div class="grid cols">
+  <div class="panel"><div class="panelhead"><h2>Recent training activity</h2><span class="pill">LOCAL SESSION</span></div><div class="panelbody" id="activity"><div class="empty">No investigations yet. Open the Email Lab to begin.</div></div></div>
+  <div class="panel"><div class="panelhead"><h2>Detection coverage</h2><span class="subtle">Training objectives</span></div><div class="panelbody">
+   <div class="metricrow"><span>Sender identity checks</span><span>Essential</span></div><div class="barline"><span style="width:92%"></span></div>
+   <div class="metricrow"><span>Urgency & social engineering</span><span>Essential</span></div><div class="barline"><span style="width:88%"></span></div>
+   <div class="metricrow"><span>URL & domain inspection</span><span>Essential</span></div><div class="barline"><span style="width:80%"></span></div>
+   <div class="metricrow"><span>Attachment awareness</span><span>Advanced</span></div><div class="barline"><span style="width:74%"></span></div>
+   <div class="disclaimer">Coverage bars describe the topics included in this training environment; they are not live security telemetry.</div>
+  </div></div>
+ </div>
+ <div style="height:15px"></div>
+ <div class="panel"><div class="panelhead"><h2>Quick actions</h2><span class="subtle">Choose a training module</span></div><div class="panelbody"><div class="quick">
+  <button onclick="navigate('emails')"><i>✉</i><b>Investigate an email</b><span>Inspect sender, message, and indicators</span></button>
+  <button onclick="navigate('url')"><i>◎</i><b>Inspect a URL</b><span>Check a domain for common warning signs</span></button>
+  <button onclick="navigate('learn')"><i>▤</i><b>Study phishing tactics</b><span>Review techniques and take the quiz</span></button>
+ </div></div></div>
+</section>
+<!-- EMAIL LAB -->
+<section class="page" id="page-emails">
+ <div class="pagehead"><div><div class="eyebrow">Incident response / mail security</div><h1>Email investigation lab</h1><p>Select a simulated message, inspect its details, then run the rule-based analysis. Compare the findings with your own assessment.</p></div><div class="toolbar"><span class="pill">6 SAMPLE MESSAGES</span><button class="btn" onclick="resetSession()">Reset session</button></div></div>
+ <div class="email-layout">
+  <div class="panel listpanel"><div class="panelhead"><h2>Training inbox</h2><span class="subtle" id="mailCount">6 messages</span></div><div id="mailList"></div></div>
+  <div class="panel"><div class="panelhead"><h2>Message details</h2><span class="pill" id="mailCategory">UNREVIEWED</span></div><div class="mailview">
+   <div class="mailtop"><div><div class="subtle" id="mailTime">Select a message</div><div class="mailtitle" id="mailSubject">Choose an email from the inbox</div></div><span class="pill" id="mailRisk">PENDING</span></div>
+   <div class="mailfields"><div><label>From</label><span id="mailFrom">—</span></div><div><label>Reply-to</label><span id="mailReply">—</span></div><div><label>To</label><span id="mailTo">—</span></div><div><label>Return path</label><span id="mailReturn">—</span></div><div><label>Received</label><span id="mailReceived">—</span></div></div>
+   <div class="mailtext" id="mailBody">Choose a message to inspect its content.</div><div id="mailAttachment"></div>
+   <div class="toolbar"><button class="btn primary" id="analyzeMail" onclick="analyzeSelected()">Run threat analysis</button><button class="btn" onclick="showHeaders()">Inspect raw headers</button><button class="btn" onclick="toggleManual()">My assessment</button></div>
+   <div id="manualAssess" class="resultbox" style="display:none"><h4>Your verdict</h4><div class="toolbar"><button class="btn" onclick="manualVerdict('phishing')">Phishing</button><button class="btn" onclick="manualVerdict('legitimate')">Likely legitimate</button><span class="subtle" id="manualResult"></span></div></div>
+   <div id="headerBox" class="resultbox" style="display:none"><h4>Simulated raw headers</h4><pre id="headers" style="white-space:pre-wrap;overflow-wrap:anywhere;color:#9fc4e8;font-size:10px;margin:8px 0 0"></pre></div>
+  </div></div>
+  <div class="panel analysispanel"><div class="panelhead"><h2>Analysis results</h2><span class="pill">RULE ENGINE</span></div><div class="panelbody"><div><div class="score-ring" id="mailRing"><strong id="mailScore">—</strong></div><div class="risklabel" id="mailRiskLabel">Not analysed</div><p class="subtle" style="text-align:center;margin:6px 0 0">Illustrative risk score / 100</p></div><div class="findings" id="mailFindings"><div class="empty">Run analysis to see detected indicators.</div></div></div></div>
+ </div>
+ <div class="disclaimer">Safety boundary: these are fictional messages and reserved example domains. The analyzer uses transparent educational heuristics, not a production email security gateway. No message is sent or received.</div>
+</section>
+<!-- URL INSPECTOR -->
+<section class="page" id="page-url">
+ <div class="pagehead"><div><div class="eyebrow">Web security / link triage</div><h1>URL inspector</h1><p>Evaluate a URL for common phishing patterns. This tool performs local string checks only — it does not visit the address or query reputation services.</p></div><span class="pill">CLIENT-SIDE ONLY</span></div>
+ <div class="urlgrid">
+  <div class="panel"><div class="panelhead"><h2>URL analysis input</h2><span class="pill">NO NETWORK REQUESTS</span></div><div class="panelbody">
+   <label class="subtle" for="urlInput">Paste a URL or domain from a training example</label><div class="urlinput" style="margin-top:8px"><input class="field" id="urlInput" placeholder="https://account.example.test/login" autocomplete="off"><button class="btn primary" onclick="inspectURL()">Inspect</button></div>
+   <div class="toolbar" style="margin-top:12px"><button class="btn" onclick="setURL('http://secure-account.verify-example.test/login')">Load suspicious example</button><button class="btn" onclick="setURL('https://www.example.edu/library')">Load neutral example</button></div>
+   <div class="resultbox"><h4>What this inspector checks</h4><p>HTTPS presence, IP-address hosts, lookalike wording, excessive subdomains, punycode, URL shorteners, unusual ports, and encoded or misleading URL structure.</p></div>
+  </div></div>
+  <div class="panel"><div class="panelhead"><h2>Inspection result</h2><span class="pill">HEURISTIC</span></div><div class="panelbody urlresult" id="urlResult"><div class="empty">Enter a URL and select Inspect. No network connection will be made.</div></div></div>
+ </div>
+ <div class="disclaimer">A low score does not prove a website is safe. A high score is a reason to pause and verify independently. HTTPS encrypts a connection; it does not prove that a website is trustworthy.</div>
+</section>
+<!-- THREAT ANALYZER -->
+<section class="page" id="page-analyzer">
+ <div class="pagehead"><div><div class="eyebrow">Detection engineering</div><h1>Threat analyzer</h1><p>Explore the transparent scoring model used in the Email Lab. Select indicators to see how weighted rules influence a simulated risk score.</p></div><span class="pill">EXPLAINABLE RULES</span></div>
+ <div class="grid cols">
+  <div class="panel"><div class="panelhead"><h2>Indicator sandbox</h2><span class="subtle">Toggle indicators</span></div><div class="panelbody">
+   <div id="sandboxRules"></div>
+   <div class="toolbar" style="margin-top:14px"><button class="btn primary" onclick="calculateSandbox()">Calculate risk</button><button class="btn" onclick="clearSandbox()">Clear all</button></div>
+  </div></div>
+  <div class="panel"><div class="panelhead"><h2>Risk calculation</h2><span class="pill">0–100</span></div><div class="panelbody">
+   <div class="score-ring" id="sandboxRing"><strong id="sandboxScore">0</strong></div><div class="risklabel" id="sandboxLabel">Low risk</div>
+   <div class="resultbox"><h4>How the score works</h4><p>Selected rule weights are added together and capped at 100. This is a training model, not a calibrated probability of compromise.</p></div>
+   <div id="sandboxBreakdown" class="subtle" style="margin-top:12px">Choose one or more indicators and calculate.</div>
+  </div></div>
+ </div>
+ <div class="panel" style="margin-top:14px"><div class="panelhead"><h2>Rule catalogue</h2><span class="subtle">Documented educational weights</span></div><div class="panelbody" id="ruleCatalogue"></div></div>
+</section>
+<!-- KNOWLEDGE -->
+<section class="page" id="page-learn">
+ <div class="pagehead"><div><div class="eyebrow">Awareness & response</div><h1>Knowledge center</h1><p>Learn the patterns behind common phishing attempts, then test your judgement with a short knowledge check.</p></div><span class="pill">LEARN / PRACTISE</span></div>
+ <div class="grid knowledge">
+  <div class="panel lesson"><h3>🎭 Social engineering</h3><p>Attackers manipulate people rather than relying only on technical exploits.</p><ul><li><b>Urgency:</b> “Act now” to bypass careful thinking.</li><li><b>Authority:</b> impersonating a manager, bank, or IT team.</li><li><b>Fear:</b> threats of suspension, fines, or lost access.</li><li><b>Reward:</b> prizes, refunds, or unexpected benefits.</li><li><b>Secrecy:</b> asking you not to verify with anyone else.</li></ul></div>
+  <div class="panel lesson"><h3>🔎 Sender & domain checks</h3><p>Look beyond the display name. Inspect the full sender address and the actual registered domain.</p><ul><li>Check for misspellings and extra words in domains.</li><li>Compare reply-to and return-path values.</li><li>Do not trust a familiar logo or display name alone.</li><li>Verify using a bookmark, official app, or known contact method.</li></ul></div>
+  <div class="panel lesson"><h3>🔗 Link & website safety</h3><p>Links can conceal destinations or imitate trusted brands.</p><ul><li>On desktop, inspect a link destination before opening it.</li><li>Beware of shortened URLs and lookalike characters.</li><li>HTTPS is encryption, not a trust certificate.</li><li>Never enter credentials after following an unexpected message link.</li></ul></div>
+  <div class="panel lesson"><h3>🧯 If you clicked or shared information</h3><p>Respond quickly and use trusted channels.</p><ul><li>Stop interacting with the message or page.</li><li>Change exposed passwords using the official site or app.</li><li>Enable MFA and revoke suspicious sessions where possible.</li><li>Notify your IT/security team or relevant provider.</li><li>Contact your bank promptly if payment information was shared.</li></ul></div>
+ </div>
+ <div class="panel" style="margin-top:14px"><div class="panelhead"><h2>Knowledge check</h2><span class="pill">5 QUESTIONS</span></div><div class="panelbody">
+  <form id="quizForm">
+   <div class="quizq"><b>1. An unexpected email says your account closes in 10 minutes unless you sign in. What is the safest response?</b><label><input type="radio" name="q1" value="a">Click its sign-in button quickly</label><label><input type="radio" name="q1" value="b">Open the official app or type the known website address yourself</label><label><input type="radio" name="q1" value="c">Reply with your password</label></div>
+   <div class="quizq"><b>2. What does HTTPS tell you?</b><label><input type="radio" name="q2" value="a">The website is definitely legitimate</label><label><input type="radio" name="q2" value="b">The connection is encrypted, but the site may still be malicious</label><label><input type="radio" name="q2" value="c">The sender has been verified</label></div>
+   <div class="quizq"><b>3. A supposed manager requests gift-card codes and says not to call. This is most likely:</b><label><input type="radio" name="q3" value="a">A routine IT update</label><label><input type="radio" name="q3" value="b">A social-engineering red flag; verify via a known channel</label><label><input type="radio" name="q3" value="c">Safe because it came from a familiar display name</label></div>
+   <div class="quizq"><b>4. You entered your password on a suspicious page. What should you do first?</b><label><input type="radio" name="q4" value="a">Ignore it if nothing happened</label><label><input type="radio" name="q4" value="b">Change it through the official service, then report and review sessions</label><label><input type="radio" name="q4" value="c">Forward the link to friends to check</label></div>
+   <div class="quizq"><b>5. Which statement about this simulator is accurate?</b><label><input type="radio" name="q5" value="a">It checks live threat intelligence feeds</label><label><input type="radio" name="q5" value="b">It safely analyses fictional samples with local educational rules</label><label><input type="radio" name="q5" value="c">It sends test phishing emails</label></div>
+   <div class="toolbar" style="margin-top:14px"><button type="button" class="btn primary" onclick="gradeQuiz()">Submit answers</button><button type="reset" class="btn" onclick="document.getElementById('quizResult').textContent=''">Reset</button></div>
+  </form><div class="resultbox" id="quizResult" aria-live="polite" style="margin-top:12px">Your result will appear here.</div>
+ </div></div>
+</section>
+</div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const RULES=[
+ {id:"sender",name:"Sender/domain mismatch",weight:25,detail:"The visible sender or reply-to domain does not align with the claimed organization."},
+ {id:"credential",name:"Credential or sensitive-data request",weight:25,detail:"The message asks for passwords, OTPs, payment details, or other sensitive information."},
+ {id:"url",name:"Suspicious or unverified URL",weight:20,detail:"The message contains an unverified destination or a link with suspicious structure."},
+ {id:"urgency",name:"Urgency, threat, or pressure",weight:15,detail:"A deadline or threat pressures the recipient to act without checking."},
+ {id:"attachment",name:"Unexpected attachment",weight:10,detail:"An unexpected attachment or unusual file type increases risk."},
+ {id:"social",name:"Impersonation or secrecy tactic",weight:15,detail:"The sender invokes authority, secrecy, or an unusual request to bypass verification."}
+];
+const MAILS=[
+ {id:"M-001",sender:"Parcel Support",from:"delivery-update@parcel-alert.example",reply:"claims@parcel-alert.example",to:"student@example.edu",returnPath:"bounce@parcel-alert.example",time:"Today · 09:14",subject:"Delivery failed — action required now",preview:"A re-delivery fee is required within 6 hours.",body:"Hello,\n\nWe could not deliver your parcel because the address information is incomplete.\n\nA re-delivery fee is required within 6 hours or your parcel will be returned. Confirm your details and payment using the button below.\n\n[SIMULATED PAYMENT BUTTON]\n\nThank you,\nParcel Support Team",attachment:"",expected:"phishing",score:85,rules:["sender","credential","url","urgency"],explain:"The sender domain is unrelated to a verified courier, the message applies a short deadline, and it requests personal/payment information through an unverified destination.",headers:"From: Parcel Support <delivery-update@parcel-alert.example>\nReply-To: claims@parcel-alert.example\nReturn-Path: <bounce@parcel-alert.example>\nAuthentication-Results: spf=neutral; dkim=none; dmarc=fail (simulated)\nX-Training-Scenario: M-001"},
+ {id:"M-002",sender:"IT Helpdesk",from:"helpdesk.security-review@example-mail.test",reply:"helpdesk.security-review@example-mail.test",to:"all-staff@example.edu",returnPath:"mailer@example-mail.test",time:"Today · 10:02",subject:"Mailbox access will be disabled",preview:"Reply with your current password to keep access.",body:"Dear User,\n\nOur system detected an issue with your mailbox. Your account will be suspended today unless you confirm your password immediately.\n\nReply to this email with your current password so our team can keep your mailbox active.\n\nIT Support",attachment:"",expected:"phishing",score:80,rules:["sender","credential","urgency","social"],explain:"A real support team should never ask for your password by email. The sender is unverified, the greeting is generic, and the threat creates pressure.",headers:"From: IT Helpdesk <helpdesk.security-review@example-mail.test>\nReply-To: helpdesk.security-review@example-mail.test\nReturn-Path: <mailer@example-mail.test>\nAuthentication-Results: spf=fail; dkim=none; dmarc=fail (simulated)\nX-Training-Scenario: M-002"},
+ {id:"M-003",sender:"Office Manager",from:"office.manager@company-notice.example",reply:"office.manager@company-notice.example",to:"finance@example.edu",returnPath:"relay@company-notice.example",time:"Today · 11:26",subject:"Confidential: urgent gift cards",preview:"Buy gift cards and email the codes. Keep this confidential.",body:"Hi team,\n\nI am in a meeting and need you to buy six gift cards immediately. Scratch the codes and email me the photos. Please keep this confidential until I return.\n\nI cannot take calls right now. This is time-sensitive.\n\nThanks,\nOffice Manager",attachment:"",expected:"phishing",score:55,rules:["sender","urgency","social"],explain:"This resembles business email compromise: unusual gift-card payment, urgency, secrecy, and avoidance of normal verification. Verify using a known phone number or in-person channel.",headers:"From: Office Manager <office.manager@company-notice.example>\nReply-To: office.manager@company-notice.example\nReturn-Path: <relay@company-notice.example>\nAuthentication-Results: spf=neutral; dkim=none; dmarc=fail (simulated)\nX-Training-Scenario: M-003"},
+ {id:"M-004",sender:"Library Services",from:"updates@library.example.edu",reply:"updates@library.example.edu",to:"student@example.edu",returnPath:"bounces@library.example.edu",time:"Today · 08:35",subject:"Your book is due next week",preview:"A reminder about your checked-out library book.",body:"Hello,\n\nA reminder that the book currently checked out to your library account is due next Tuesday.\n\nYou can review your loans by opening the library app directly or visiting the library website you normally use. No reply is required.\n\nRegards,\nLibrary Services",attachment:"",expected:"legitimate",score:0,rules:[],explain:"No obvious warning sign appears in the details shown. The message is informational and recommends opening a familiar app or website. Still verify unexpected messages independently.",headers:"From: Library Services <updates@library.example.edu>\nReply-To: updates@library.example.edu\nReturn-Path: <bounces@library.example.edu>\nAuthentication-Results: spf=pass; dkim=pass; dmarc=pass (simulated)\nX-Training-Scenario: M-004"},
+ {id:"M-005",sender:"Document Share",from:"no-reply@docu-share-access.example",reply:"verify@docu-share-access.example",to:"student@example.edu",returnPath:"dispatch@docu-share-access.example",time:"Yesterday · 16:42",subject:"A document was shared with you",preview:"Open the attached file to view a confidential document.",body:"Hello,\n\nA confidential document has been shared with you. The file requires you to enable active content to view it.\n\nPlease review the attached file and sign in if prompted.\n\nDocument Services",attachment:"Shared_Invoice_Review.xlsm · macro-enabled spreadsheet",expected:"phishing",score:70,rules:["sender","url","attachment","credential"],explain:"The sender domain is unverified, the attachment is macro-enabled, and the message asks the recipient to enable active content and sign in. Do not open unexpected attachments.",headers:"From: Document Share <no-reply@docu-share-access.example>\nReply-To: verify@docu-share-access.example\nReturn-Path: <dispatch@docu-share-access.example>\nAuthentication-Results: spf=softfail; dkim=none; dmarc=fail (simulated)\nX-Training-Scenario: M-005"},
+ {id:"M-006",sender:"Campus IT Notices",from:"notices@it.example.edu",reply:"notices@it.example.edu",to:"student@example.edu",returnPath:"bounce@it.example.edu",time:"Yesterday · 14:05",subject:"Planned Wi-Fi maintenance on Friday",preview:"Scheduled maintenance window; no action required.",body:"Hello,\n\nCampus Wi-Fi maintenance is planned for Friday from 7:00 PM to 8:00 PM. During this period, wireless access may be interrupted.\n\nNo action is required. For updates, use the campus IT portal you normally access.\n\nRegards,\nCampus IT Notices",attachment:"",expected:"legitimate",score:0,rules:[],explain:"This is a routine informational notice with no credential or payment request and no embedded action link. The sender domain appears consistent with the claimed campus IT domain in this fictional scenario.",headers:"From: Campus IT Notices <notices@it.example.edu>\nReply-To: notices@it.example.edu\nReturn-Path: <bounce@it.example.edu>\nAuthentication-Results: spf=pass; dkim=pass; dmarc=pass (simulated)\nX-Training-Scenario: M-006"}
+];
+let selected=0, completed={}, activities=[];
+function $(id){return document.getElementById(id)}
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2300)}
+function navigate(page){
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+page));
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+ const names={dashboard:"Overview",emails:"Email Lab",url:"URL Inspector",analyzer:"Threat Analyzer",learn:"Knowledge Center"};
+ $("crumb").textContent=names[page]||page;
+}
+document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>navigate(b.dataset.page)));
+function riskBand(score){return score>=65?"High":score>=30?"Medium":"Low"}
+function ring(el,score){const color=score>=65?"var(--red)":score>=30?"var(--amber)":"var(--green)";el.style.background=`conic-gradient(${color} ${score*3.6}deg,#273a50 0deg)`}
+function renderInbox(){
+ $("mailList").innerHTML=MAILS.map((m,i)=>`<div class="mailitem ${i===selected?"selected":""}" onclick="selectMail(${i})"><div style="display:flex;justify-content:space-between;gap:5px"><span class="sender">${escapeHTML(m.sender)}</span><span class="pill ${m.expected==="phishing"?"high":"low"}">${m.expected==="phishing"?"Review":"Routine"}</span></div><div class="subj">${escapeHTML(m.subject)}</div><div class="preview">${escapeHTML(m.preview)}</div></div>`).join("");
+}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function selectMail(i){
+ selected=i;const m=MAILS[i];renderInbox();
+ $("mailTime").textContent=m.time+" · "+m.id;$("mailSubject").textContent=m.subject;
+ $("mailFrom").textContent=m.from;$("mailReply").textContent=m.reply;$("mailTo").textContent=m.to;$("mailReturn").textContent=m.returnPath;$("mailReceived").textContent=m.time;
+ $("mailBody").textContent=m.body;$("mailAttachment").innerHTML=m.attachment?`<div class="attachment">📎 ${escapeHTML(m.attachment)}</div>`:"";
+ $("mailCategory").textContent=completed[m.id]?"ANALYSED":"UNREVIEWED";
+ $("mailRisk").textContent=completed[m.id]?riskBand(m.score).toUpperCase()+" RISK":"PENDING";
+ $("mailRisk").className="pill "+(m.score>=65?"high":m.score>=30?"medium":"low");
+ $("mailFindings").innerHTML='<div class="empty">Run analysis to see detected indicators.</div>';
+ $("mailScore").textContent="—";$("mailRiskLabel").textContent="Not analysed";ring($("mailRing"),0);
+ $("headerBox").style.display="none";$("manualAssess").style.display="none";$("manualResult").textContent="";
+}
+function renderFindings(m){
+ if(!m.rules.length)return '<div class="finding"><span class="ficon">✓</span><div><b>No configured indicators triggered</b><small>Always verify unexpected messages independently.</small></div></div>';
+ return m.rules.map(id=>{const r=RULES.find(x=>x.id===id);return `<div class="finding"><span class="ficon">⚠</span><div><b>${escapeHTML(r.name)} <span class="amber">+${r.weight}</span></b><small>${escapeHTML(r.detail)}</small></div></div>`}).join("");
+}
+function analyzeSelected(){
+ const m=MAILS[selected];completed[m.id]=true;
+ const calculated=Math.min(100,m.rules.reduce((s,id)=>s+RULES.find(r=>r.id===id).weight,0));
+ $("mailScore").textContent=calculated;ring($("mailRing"),calculated);
+ $("mailRiskLabel").textContent=riskBand(calculated)+" risk";
+ $("mailRiskLabel").style.color=calculated>=65?"var(--red)":calculated>=30?"var(--amber)":"var(--green)";
+ $("mailFindings").innerHTML=renderFindings(m);
+ $("mailCategory").textContent="ANALYSED";$("mailRisk").textContent=riskBand(calculated).toUpperCase()+" RISK";
+ $("mailRisk").className="pill "+(calculated>=65?"high":calculated>=30?"medium":"low");
+ $("headerBox").style.display="none";
+ if(!activities.some(a=>a.id===m.id))activities.unshift({id:m.id,subject:m.subject,score:calculated});
+ updateDashboard();renderInbox();toast("Analysis complete — "+riskBand(calculated)+" risk");
+}
+function showHeaders(){const m=MAILS[selected];$("headers").textContent=m.headers;$("headerBox").style.display=$("headerBox").style.display==="none"?"block":"none"}
+function toggleManual(){$("manualAssess").style.display=$("manualAssess").style.display==="none"?"block":"none"}
+function manualVerdict(v){const m=MAILS[selected];const correct=v===m.expected;$("manualResult").textContent=correct?"✓ Correct assessment":"✕ Revisit the message indicators";$("manualResult").style.color=correct?"var(--green)":"var(--red)"}
+function updateDashboard(){
+ const done=Object.keys(completed).length;const accuracy=activities.length?Math.round(activities.filter(a=>{const m=MAILS.find(x=>x.id===a.id);return (a.score>=30)===(m.expected==="phishing")}).length/activities.length*100):null;
+ $("kDone").textContent=done;$("kAccuracy").textContent=accuracy===null?"—":accuracy+"%";
+ $("activity").innerHTML=activities.length?activities.slice(0,6).map(a=>`<div class="event"><span class="eventdot" style="background:${a.score>=65?"var(--red)":a.score>=30?"var(--amber)":"var(--green)"}"></span><div><b>${escapeHTML(a.id)} · ${escapeHTML(a.subject)}</b><p>Rule analysis completed · ${riskBand(a.score)} risk</p></div><time>${a.score}/100</time></div>`).join(""):'<div class="empty">No investigations yet. Open the Email Lab to begin.</div>';
+}
+function resetSession(){completed={};activities=[];selectMail(0);updateDashboard();toast("Session progress reset")}
+function inspectURL(){
+ const raw=$("urlInput").value.trim();if(!raw){$("urlResult").innerHTML='<div class="empty">Enter a URL first.</div>';return}
+ let u,score=0,findings=[];
+ try{u=new URL(raw.includes("://")?raw:"http://"+raw)}catch(e){$("urlResult").innerHTML='<div class="empty red">This does not look like a valid URL. Check its format.</div>';return}
+ const host=u.hostname.toLowerCase(),full=u.href.toLowerCase();
+ const add=(points,title,desc)=>{score+=points;findings.push({points,title,desc})};
+ if(u.protocol!=="https:")add(15,"No HTTPS","The URL does not use HTTPS. This is a warning sign, although HTTPS alone cannot prove trust.");
+ if(/^\d{1,3}(\.\d{1,3}){3}$/.test(host))add(25,"IP-address host","The destination uses an IP address rather than a recognisable domain.");
+ if(host.startsWith("xn--")||host.includes(".xn--"))add(25,"Punycode domain","Punycode can represent international characters and may be used in lookalike domains.");
+ if(host.split(".").length>=5)add(10,"Many subdomains","Several subdomain levels can obscure the actual registered domain.");
+ if(/login|verify|secure|account|update|wallet|password|support/.test(host))add(10,"Sensitive-action wording","The hostname contains words often used to create trust or urgency. Context matters.");
+ if(/bit\.ly|tinyurl\.com|t\.co|goo\.gl|is\.gd/.test(host))add(15,"URL shortener","The final destination is obscured until the short link is expanded safely.");
+ if(u.port && !["80","443"].includes(u.port))add(10,"Unusual port","The URL specifies a non-standard web port.");
+ if(/%[0-9a-f]{2}/i.test(full))add(5,"Percent-encoded characters","Encoded characters can make a URL harder to read. Encoding is not inherently malicious.");
+ if(host.includes("@")||u.username||u.password)add(20,"User-info URL structure","Credentials or an @ symbol in the authority section can disguise the apparent destination.");
+ score=Math.min(100,score);
+ const band=riskBand(score),color=score>=65?"var(--red)":score>=30?"var(--amber)":"var(--green)";
+ $("urlResult").innerHTML=`<div class="score-ring" id="urlRing"><strong>${score}</strong></div><div class="risklabel" style="color:${color}">${band} risk indicators</div><div class="domain">${escapeHTML(host)}</div><div class="urlnote">${escapeHTML(u.protocol+"//"+host+u.pathname)}</div><div style="margin-top:16px">${findings.length?findings.map(f=>`<div class="finding"><span class="ficon">⚠</span><div><b>${escapeHTML(f.title)} <span class="amber">+${f.points}</span></b><small>${escapeHTML(f.desc)}</small></div></div>`).join(""):'<div class="finding"><span class="ficon">✓</span><div><b>No configured URL heuristics triggered</b><small>This does not mean the destination is safe. Verify it independently.</small></div></div>'}</div>`;
+ ring($("urlRing"),score);
+}
+function setURL(v){$("urlInput").value=v;inspectURL()}
+function buildRules(){
+ $("sandboxRules").innerHTML=RULES.map(r=>`<label class="indicator"><input type="checkbox" value="${r.id}"><span><b>${r.name} <span class="amber">+${r.weight}</span></b><small>${r.detail}</small></span></label>`).join("");
+ $("ruleCatalogue").innerHTML=RULES.map(r=>`<div class="metricrow"><span><b style="color:#dceaff">${r.name}</b><br><span class="subtle">${r.detail}</span></span><strong class="amber">+${r.weight}</strong></div>`).join("");
+}
+function calculateSandbox(){
+ const ids=[...$("sandboxRules").querySelectorAll("input:checked")].map(x=>x.value);
+ const score=Math.min(100,ids.reduce((sum,id)=>sum+RULES.find(r=>r.id===id).weight,0));const band=riskBand(score);
+ $("sandboxScore").textContent=score;ring($("sandboxRing"),score);$("sandboxLabel").textContent=band+" risk";
+ $("sandboxLabel").style.color=score>=65?"var(--red)":score>=30?"var(--amber)":"var(--green)";
+ $("sandboxBreakdown").innerHTML=ids.length?ids.map(id=>{const r=RULES.find(x=>x.id===id);return `<div class="metricrow"><span>${r.name}</span><strong>+${r.weight}</strong></div>`}).join(""):"No indicators selected.";
+}
+function clearSandbox(){$("sandboxRules").querySelectorAll("input").forEach(x=>x.checked=false);$("sandboxScore").textContent="0";ring($("sandboxRing"),0);$("sandboxLabel").textContent="Low risk";$("sandboxBreakdown").textContent="Choose one or more indicators and calculate."}
+function gradeQuiz(){
+ const key={q1:"b",q2:"b",q3:"b",q4:"b",q5:"b"};let score=0,answered=0;
+ Object.entries(key).forEach(([q,a])=>{const v=document.querySelector(`input[name="${q}"]:checked`);if(v){answered++;if(v.value===a)score++}});
+ if(answered<5){$("quizResult").innerHTML=`<span class="amber">Please answer all five questions.</span> You have answered ${answered}/5.`;return}
+ $("quizResult").innerHTML=`<h4 style="color:${score>=4?"var(--green)":"var(--amber)"}">Your score: ${score}/5</h4><p>${score===5?"Excellent — you understand the core safety practices.":score>=3?"Good work. Review the learning notes and revisit any missed concepts.":"Keep learning. Revisit the Knowledge Center and try again."}</p>`;
+}
+renderInbox();selectMail(0);buildRules();updateDashboard();
+</script>
+</body>
+</html>
